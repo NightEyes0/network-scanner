@@ -1,26 +1,27 @@
 import socket
 
-# target we scanning.
 target = "scanme.nmap.org"
-port = 80  # Port 80 standard port for(HTTP)
 
-print(f"Testing connection to {target} on port {port}...")
+print(f"Scanning target: {target}")
+print("Scanning ports 1 to 100 (this might take a minute)...\n")
 
-# Create socket 
-# AF_INET= IPv4 address. SOCK_STREAM = TCP.
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# A loop that goes from 1 to 100
+for port in range(1, 101):
+    
+    #  NEW socket for this specific port
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    # timeout to 0.5 seconds 
+    s.settimeout(0.5)
+    
+    #  Attempt  connection
+    result = s.connect_ex((target, port))
+    
+    # 4.  prints  if the port is OPEN 
+    if result == 0:
+        print(f"[+] Port {port} is OPEN 🔓")
+        
+    # 5. Close socket 
+    s.close()
 
-#   socket wait - maximum of 2 seconds for a reply
-s.settimeout(2)
-
-#  Attempt to connect. 'connect_ex' returns an error code. 
-# returns  0, connection was a success
-result = s.connect_ex((target, port))
-
-if result == 0:
-    print(f"Result: Port {port} is OPEN! 🔓")
-else:
-    print(f"Result: Port {port} is CLOSED. 🔒")
-
-# 4. end connection
-s.close()
+print("\nScan complete!")
