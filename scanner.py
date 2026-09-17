@@ -1,27 +1,26 @@
 import socket
+import concurrent.futures
 
 target = "scanme.nmap.org"
 
-print(f"Scanning target: {target}")
-print("Scanning ports 1 to 100 (this might take a minute)...\n")
-
-# A loop that goes from 1 to 100
-for port in range(1, 101):
-    
-    #  NEW socket for this specific port
+#  socket logic inside a function
+def scan_port(port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    
-    # timeout to 0.5 seconds 
     s.settimeout(0.5)
     
-    #  Attempt  connection
     result = s.connect_ex((target, port))
-    
-    # 4.  prints  if the port is OPEN 
     if result == 0:
         print(f"[+] Port {port} is OPEN 🔓")
         
-    # 5. Close socket 
     s.close()
+
+print(f"Scanning target: {target}")
+print("Scanning ports 1 to 100 using multi-threading...\n")
+
+
+# 100  (threads) to run at the exact same time.
+with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+    # 'map' runs the 'scan_port' function on numbers 1 through 100
+    executor.map(scan_port, range(1, 101))
 
 print("\nScan complete!")
