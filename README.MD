@@ -1,4 +1,4 @@
-# Multi-threaded Network Scanner 🕵️‍♂️
+# Multi-threaded Network Scanner 
 
 A fast, command-line TCP port scanner built in Python with live OSINT geolocation, demonstrating socket programming and concurrent execution.
 
